@@ -106,7 +106,7 @@ settings = {
     }
 
 class EIC_OP_ReturntoScene(bpy.types.Operator):
-    """Return to main scene"""
+    """Return to scene / collection"""
     bl_idname = "object.eic_return_to_scene"
     bl_label = "Return to Scene"
     bl_options = {"REGISTER", "UNDO"}
@@ -234,7 +234,7 @@ class EIC_PT_PanelLinkedEdit(bpy.types.Panel):
                 props = layout.operator("object.eic_return_to_scene", text = 'Previous Collection', icon=icon)
                 props.scene = 'previous'
             if len(settings["tmp_scene"]) >= 1:
-                props = layout.operator("object.eic_return_to_scene", text='Return to Main Scene', icon='SCENE_DATA')
+                props = layout.operator("object.eic_return_to_scene", text='Return to Scene', icon='SCENE_DATA')
                 props.scene = 'main'
 
 class EditInstancedCollectionPreferences(bpy.types.AddonPreferences):
