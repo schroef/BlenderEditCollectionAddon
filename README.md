@@ -21,7 +21,7 @@ build_release.py script to build a ZIP file that you can install into Blender.
 3. Open Blender.
 4. Go to File -> User Preferences -> Addons.
 5. At the bottom of the window, choose *Install From File*.
-6. Select the file `quickswitch-master.zip` from your download location..
+6. Select the file `edit_instanced_collection_XXXX.zip` from your download location..
 7. Activate the checkbox for the plugin that you will now find in the list.
 8. Set custom pie menu items by setting shortcuts for WM menu
 
@@ -44,7 +44,7 @@ made by the addon (usually, using the Clean Up tools). -->
 
 ## Preview
 
-!['Look UI'](https://raw.githubusercontent.com/wiki/schroef/BlenderEditCollectionAddon/wiki/Edit-Easier-Workflow-v023-720p.mp4?v20220923)
+!['Look UI'](https://raw.githubusercontent.com/wiki/schroef/BlenderEditCollectionAddon/Wiki/Edit-Easier-Workflow-v023-720p.mp4?v20220924)
 
 
 ### System Requirements
