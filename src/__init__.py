@@ -5,7 +5,7 @@ bl_info = {
     "name": "Edit Instanced Collection",
     "description": "Edit a Collection Instance's source Collection (even if it is not in the Scene).",
     "author": "FLEB",
-    "version": (0, 2, 3),
+    "version": (0, 2, 4),
     "blender": (3, 1, 0),
     "location": "Object > Edit Instanced Collection",
     "doc_url": "https://github.com/SuperFLEB/BlenderEditCollectionAddon",
@@ -34,9 +34,15 @@ class EditCollection(bpy.types.Operator):
             self.report({"WARNING"}, "Active item is not a collection instance")
             return {"CANCELLED"}
 
+        # settings["original_scene"] = context.scene.name[:64] #.substring(0, 64)
         settings["original_scene"].append(context.scene.name[:64]) #.substring(0, 64)
+        settings["view_layer"].append(context.window.view_layer.name) #.substring(0, 64)
         scene_name = f"temp:{str(coll.name)[:50]}"
         # print("Scene_name %s" % scene_name)
+        # print("original_scene %s" % settings["original_scene"])
+        # print("tmp_scene %s" % settings["tmp_scene"])
+        # print("view_layer %s" % settings["view_layer"])
+        # print("view_layer %s" % settings["view_layer"][0])
         # print("Scene_name %s" % str(tmp_name)[:10])
         # print("Scene_name %s" % scene_name[:10])
         # print("Scene_name %s" % scene_name[:20])
@@ -100,6 +106,7 @@ class EditCollection(bpy.types.Operator):
 settings = {
     "original_scene": [],
     "tmp_scene": [],
+    "view_layer": [],
     # "linked_objects": [],
     # "linked_nodes": []
     }
@@ -113,12 +120,15 @@ class EIC_OP_ReturntoScene(bpy.types.Operator):
     scene : bpy.props.StringProperty()
 
     def execute(self, context):
+        print("Scene %s" % self.scene)
         if (self.scene == "previous"):
             settings["tmp_scene"].remove(context.scene.name)
             if (settings["tmp_scene"] == 0):
                 settings["original_scene"] =[]
+                settings["view_layer"] =[]
             else:
                 settings["original_scene"].pop(len(settings["original_scene"])-1)
+                settings["view_layer"].pop(len(settings["view_layer"])-1)
 
             bpy.ops.scene.delete()
             bpy.ops.view3d.view_selected(use_all_regions=False)
@@ -128,9 +138,13 @@ class EIC_OP_ReturntoScene(bpy.types.Operator):
                 bpy.context.window.scene = bpy.data.scenes[scn]
                 bpy.ops.scene.delete()
             bpy.ops.view3d.view_selected(use_all_regions=False)
+            context.window.view_layer = context.scene.view_layers[settings['view_layer'][0]]
             settings["original_scene"] = []
             settings["tmp_scene"] = []
+            settings["view_layer"] = []
             # logger.info("Back to the original!")
+        #frame selected    
+        bpy.ops.view3d.view_selected(use_all_regions=False)
         return {'FINISHED'}
 
 class EIC_PT_PanelLinkedEdit(bpy.types.Panel):
@@ -143,7 +157,17 @@ class EIC_PT_PanelLinkedEdit(bpy.types.Panel):
 
     @classmethod
     def poll(cls, context: bpy.context):
+        # print(context.active_object)
+        # return settings["original_scene"] != ""
         return (context.active_object is not None) or (settings["original_scene"] != [])
+
+    # def draw_common(self, scene, layout, props):
+    #     if props is not None:
+    #         props.use_autosave = scene.use_autosave
+    #         props.use_instance = scene.use_instance
+
+    #         layout.prop(scene, "use_autosave")
+    #         layout.prop(scene, "use_instance")
 
     def draw(self, context: bpy.context):
         scene = context.scene
@@ -151,18 +175,71 @@ class EIC_PT_PanelLinkedEdit(bpy.types.Panel):
         layout.use_property_split = False
         layout.use_property_decorate = False
 
+        # layout.operator("object.eic_return_to_scene")
+
         target = None
 
         icon = 'OUTLINER_COLLECTION'
         try:
+            # icon = "OUTLINER_DATA_" + context.active_object.type.replace("LIGHT_PROBE", "LIGHTPROBE")
             target = context.active_object
+        
             if settings["original_scene"] == "" or settings["original_scene"] != "" and (target.instance_collection is not None):
+            # if settings["original_scene"] == "" and (target is not None):
+                    # (target and
+                    # target.library is not None) or
+                    # context.active_object.library is not None or
+                    # (context.active_object.override_library is not None and
+                    # context.active_object.override_library.reference is not None)):
+
                 if (target.instance_collection is not None):
                     props = layout.operator("object.edit_collection", icon="LINK_BLEND",
                                             text="Edit Collection") # %s" % target.name)
+            #     elif (context.active_object.library):
+            #         props = layout.operator("object.edit_linked", icon="LINK_BLEND",
+            #                                 text="Edit Library: %s" % context.active_object.name)
+            #     else:
+            #         props = layout.operator("object.edit_linked", icon="LINK_BLEND",
+            #                                 text="Edit Override Library: %s" % context.active_object.override_library.reference.name)
 
+            #     self.draw_common(scene, layout, props)
+
+            #     if (target is not None):
+            #         layout.label(text="Path: %s" %
+            #                     target.library.filepath)
+            #     elif (context.active_object.library):
+            #         layout.label(text="Path: %s" %
+            #                     context.active_object.library.filepath)
+            #     else:
+            #         layout.label(text="Path: %s" %
+            #                     context.active_object.override_library.reference.library.filepath)
             else:
                 layout.label(text="%s is not linked" % context.active_object.name,icon=icon)
+            
+            
+            #         layout.separator()
+
+            #         # XXX - This is for nested linked assets... but it only works
+            #         # when launching a new Blender instance. Nested links don't
+            #         # currently work when using a single instance of Blender.
+            #         if context.active_object.instance_collection is not None:
+            #             props = layout.operator("object.edit_linked",
+            #                     text="Edit Library: %s" % context.active_object.instance_collection.name,
+            #                     icon="LINK_BLEND")
+            #         else:
+            #             props = None
+
+            #         self.draw_common(scene, layout, props)
+
+            #         if context.active_object.instance_collection is not None:
+            #             layout.label(text="Path: %s" %
+            #                     context.active_object.instance_collection.library.filepath)
+
+            #     else:
+            #         props = layout.operator("wm.return_to_original", icon="LOOP_BACK")
+            #         props.use_autosave = scene.use_autosave
+
+            #         layout.prop(scene, "use_autosave")
         except:
             pass
         if settings["original_scene"] != []:

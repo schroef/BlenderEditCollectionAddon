@@ -44,8 +44,7 @@ made by the addon (usually, using the Clean Up tools). -->
 
 ## Preview
 
-!['Look UI'](https://raw.githubusercontent.com/wiki/schroef/BlenderEditCollectionAddon/images/Edit-Easier-Workflow-v023-720p.gif?v20220924)
-<!-- !['Look UI'](https://raw.githubusercontent.com/wiki/schroef/BlenderEditCollectionAddon/images/Edit-Easier-Workflow-v023-720p.mp4?v20220924) -->
+!['Look UI'](https://raw.githubusercontent.com/wiki/schroef/BlenderEditCollectionAddon/images/Edit-Easier-Workflow-v023-720p.gif?v20240228)
 
 
 ### System Requirements
@@ -59,7 +58,3 @@ made by the addon (usually, using the Clean Up tools). -->
 
 ### Changelog
 [Full Changelog](CHANGELOG.md)
-
-
-
-<!-- https://raw.githubusercontent.com/wiki/schroef/quickswitch/images/addon-preferences_v023.png?v20220923 -->

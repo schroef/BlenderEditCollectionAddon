@@ -1,6 +1,10 @@
 All notable changes to this project will be documented in this file.
 # Changelog
 
+## [0.2.4] - 2025-02-24
+### Added
+- When having different scenes and view_layers, it would not go back into proper view_layer of the scene
+
 ## [0.2.3] - 2024-02-28
 ### Added
 - When going into nested collection, show return Main Scene button (also removes all tmp scenes)
@@ -30,6 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 <!--### Official Rigify Info-->
 
+[0.2.4]:https://github.com/SuperFLEB/BlenderEditCollectionAddon/releases/tag/v.0.2.4
 [0.2.3]:https://github.com/SuperFLEB/BlenderEditCollectionAddon/releases/tag/v.0.2.3
 [0.2.2]:https://github.com/SuperFLEB/BlenderEditCollectionAddon/releases/tag/v.0.2.2
 [0.2.1]:https://github.com/SuperFLEB/BlenderEditCollectionAddon/releases/tag/v.0.1.1
