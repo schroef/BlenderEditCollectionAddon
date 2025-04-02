@@ -1,6 +1,14 @@
 All notable changes to this project will be documented in this file.
 # Changelog
 
+## [0.2.6] - 2025-04-02
+### Fixed
+- Issue with viewlayer and multiple scene. When going back to previews scene, it would pick wrong scene from list > EIC_OP_ReturntoScene
+
+## [0.2.5] - 2025-03-31
+### Added
+- Active world shader > use same as actiive scene. Good for matching materials using same lighting
+
 ## [0.2.4] - 2025-02-24
 ### Added
 - When having different scenes and view_layers, it would not go back into proper view_layer of the scene
@@ -34,6 +42,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 <!--### Official Rigify Info-->
 
+[0.2.4]:https://github.com/SuperFLEB/BlenderEditCollectionAddon/releases/tag/v.0.2.6
 [0.2.4]:https://github.com/SuperFLEB/BlenderEditCollectionAddon/releases/tag/v.0.2.4
 [0.2.3]:https://github.com/SuperFLEB/BlenderEditCollectionAddon/releases/tag/v.0.2.3
 [0.2.2]:https://github.com/SuperFLEB/BlenderEditCollectionAddon/releases/tag/v.0.2.2

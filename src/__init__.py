@@ -5,7 +5,7 @@ bl_info = {
     "name": "Edit Instanced Collection",
     "description": "Edit a Collection Instance's source Collection (even if it is not in the Scene).",
     "author": "FLEB",
-    "version": (0, 2, 4),
+    "version": (0, 2, 6),
     "blender": (3, 1, 0),
     "location": "Object > Edit Instanced Collection",
     "doc_url": "https://github.com/SuperFLEB/BlenderEditCollectionAddon",
@@ -56,24 +56,27 @@ class EditCollection(bpy.types.Operator):
         settings["tmp_scene"].append(scene_name)
 
         if prefs.world_texture != "none":
-            world = bpy.data.worlds.new(bpy.context.scene.name)
-            new_scene.world = world
-            world.use_nodes = True
-            tree = world.node_tree
+                world = bpy.data.worlds.new(bpy.context.scene.name)
+                new_scene.world = world
+                world.use_nodes = True
+                tree = world.node_tree
 
-            if prefs.world_texture in ["checker", "checker_view"]:
-                checker_texture = tree.nodes.new("ShaderNodeTexChecker")
-                checker_texture.inputs["Scale"].default_value = 20
-                checker_texture.location = Vector((-250, 0))
-                if prefs.world_texture == "checker_view":
-                    coord = tree.nodes.new("ShaderNodeTexCoord")
-                    coord.location = Vector((-500, 0))
-                    for op in coord.outputs:
-                        op.hide = True
-                    tree.links.new(coord.outputs["Window"], checker_texture.inputs["Vector"])
-                tree.links.new(checker_texture.outputs["Color"], tree.nodes["Background"].inputs["Color"])
-            elif prefs.world_texture == "gray":
-                tree.nodes["Background"].inputs["Color"].default_value = (.3, .3, .3, 1)
+                if prefs.world_texture == "active":
+                    print(settings["original_scene"][0])
+                    bpy.context.scene.world = bpy.data.scenes[settings["original_scene"][0]].world
+                if prefs.world_texture in ["checker", "checker_view"]:
+                    checker_texture = tree.nodes.new("ShaderNodeTexChecker")
+                    checker_texture.inputs["Scale"].default_value = 20
+                    checker_texture.location = Vector((-250, 0))
+                    if prefs.world_texture == "checker_view":
+                        coord = tree.nodes.new("ShaderNodeTexCoord")
+                        coord.location = Vector((-500, 0))
+                        for op in coord.outputs:
+                            op.hide = True
+                        tree.links.new(coord.outputs["Window"], checker_texture.inputs["Vector"])
+                    tree.links.new(checker_texture.outputs["Color"], tree.nodes["Background"].inputs["Color"])
+                elif prefs.world_texture == "gray":
+                    tree.nodes["Background"].inputs["Color"].default_value = (.3, .3, .3, 1)
 
         # Select the collection
         bpy.context.view_layer.active_layer_collection = bpy.context.view_layer.layer_collection.children[coll.name]
@@ -120,7 +123,7 @@ class EIC_OP_ReturntoScene(bpy.types.Operator):
     scene : bpy.props.StringProperty()
 
     def execute(self, context):
-        print("Scene %s" % self.scene)
+        # print("Scene %s" % self.scene)
         if (self.scene == "previous"):
             settings["tmp_scene"].remove(context.scene.name)
             if (settings["tmp_scene"] == 0):
@@ -138,6 +141,10 @@ class EIC_OP_ReturntoScene(bpy.types.Operator):
                 bpy.context.window.scene = bpy.data.scenes[scn]
                 bpy.ops.scene.delete()
             bpy.ops.view3d.view_selected(use_all_regions=False)
+            # print(f"View_layer: {settings['view_layer'][0]}")
+            # # print(f"View_layer: {settings['view_layer'][1]}")
+            # print(f"Org_scen: {settings['original_scene'][0]}")
+            bpy.context.window.scene = bpy.data.scenes[settings["original_scene"][0]]
             context.window.view_layer = context.scene.view_layers[settings['view_layer'][0]]
             settings["original_scene"] = []
             settings["tmp_scene"] = []
@@ -264,7 +271,8 @@ class EditInstancedCollectionPreferences(bpy.types.AddonPreferences):
             ("checker", "Checker (generated map)", "Checker-like texture using a Generated map"),
             ("checker_view", "Checker (view aligned)", "Checkerboard texture aligned to the view"),
             ("gray", "Gray", "Solid Gray Background"),
-            ("none", "None", "No World/background (black)")
+            ("none", "None", "No World/background (black)"),
+            ("active", "Active", "Use current active World")
         ]
     )
 
