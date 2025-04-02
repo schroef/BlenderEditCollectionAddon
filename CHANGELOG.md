@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.5] - 2025-03-31
 ### Added
-- Active world shader > use same as actiive scene. Good for matching materials using same lighting
+- Active world shader > use same as active scene. Good for matching materials using same lighting
 
 ## [0.2.4] - 2025-02-24
 ### Added
